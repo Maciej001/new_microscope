@@ -230,8 +230,44 @@ Meteor.startup(function(){
 
 ## Data security
 By default data security is turned off.
-`meteor remove insecure`
+`meteor remove insecure` - to remove insecurity
 
+Without insecure package client-side inserts into the posts collection are no longer allowed.
+
+So we need eirther to tell rules for a client side, or else do our post insertions on the server-side
+
+### Client side insertions
+```
+Posts = new Mongo.Collection('posts');
+
+Posts.allow({
+    insert: function(userId, doc) {
+        // only allow posting if you are logged in
+        return !! userId;
+    }
+});
+```
+
+### Securing access to the New Post form
+
+Implementation at router level, by defining a *route hook* 
+
+**Hook** intercepts the routing process and potentially changes the action that the router takes.
+
+Add to `Router.onBeforeAction`
+
+Routing hooks are *reactive*. This means we don't need to think about setting up callbacks when the user logs in: when the log-in state of the user changes, the Router's page template instantly changes from `accessDenied` to `postSubmit`.
+
+To avoid blinking of strange templates use `Meteor.loggingIn()` for loading `loadingTemplate` first (p116).
+
+**Hiding link** 
+```
+{{#if currentUser}}
+    <li href="{{pathFor 'postSubmit'}}"><a>Submit Post</a><li>
+{{/if}}
+```
+
+`currentUser` helper is provided by the accounts package and is Spacebars equivalent of `Meteor.user()`. And it's *reactive*.
 
 
 
