@@ -71,6 +71,129 @@ Template.posts.helpers({
     });
 ```
 
+If you return cursor `Posts.find({'author': 'Tom'});` in a publish function, that's exactly what Meteor is using.
+
+When Meteor sees that the `somePosts` publication has returned a cursor, it calls _publishCursor() to publish that cursor automatically. 
+
+`_publishCursor()` does:
+* checks the name of the server-side collection
+* pulls all matching documents form the cursor and sends it into a client-side collection of *the same name*. It uses `added()` to do this.
+* Whenever a document is added, removed, changed, sends those changes down to the client-side collection. It uses `.observe()` on the cursor and `.added()`, `.changed()` and `.removed()` to do this.
+
+### How to publish only specific properties?
+```
+Meteor.publish('allPosts', function(){
+        return Posts.find({}, {fields: {
+                date: false // publishes all fields except of the date
+            }});
+    });
+```
+
+to publish Tom's posts but without dates:
+
+```
+Meteor.publish('allPosts', function(){
+    return Posts.find({'author': 'Toym'}, {fields: { data: false }});
+});
+
+```
+
+## Iron Router
+**Routes** set of instructions that tell the app where to go and what to do when it encounters a URL.
+**Paths** static -> `/terms_of_service`, dynamic `/posts/xyz` or include query `/search?keyword=meteor`
+**Hooks** actions before, after, etc. Typical -> checking if user has rights before displaying a page
+**Route Templates** If no template it will look for a template with the same name as the route by default.
+**Layouts** Frames for content. Wrap current template, and remain the same even if the template itself changes.
+**Controllers** contain all the common routing logic
+
+### Mapping URLs to Templates
+`{{> yield }}` helper defines a special dynamic zone that will automatically render whichever template corresponds to the current route
+
+### /lib folder
+Anything you put inside the `/lib` is loaded first before anything else in your app. Any code inside is available to both client and server environments.
+
+`{{pathFor}}` is a spacebars helper, which returns the URL path component of any route.
+
+Usage: 
+`<a class="navbar-brand" href="{{pathFor 'postsList'}}">Microscope</a>`
+
+### Waiting on data
+You can ask Iron Router to wait on the subscription. Just move your subscriptio from main.js to router:
+```
+Router.configure({
+    layoutTemplate: 'layout',
+    waitOn: function() { return Meteor.subscribe('posts'); }
+});
+
+Router.route('/', {name: 'postsList'})
+```
+
+### Setting data context in template
+```
+{{#each widgets}}
+    {{> widgetItem}}
+{{/each}}
+```
+
+but we can explicitly use `{{#with}}` - take this object and apply the following template to it:
+```
+{{#with myWidget}}
+    {{> widgetPage}}
+{{/with}}
+```
+
+You can achieve the same result by passing the context as an argument to the template call:
+
+`{{> widgetPage myWidget}}`
+
+if we name the route for posts `postPage`, we acn use  `{{pathFor 'postPage'}}`Here Iron Router figures itself _id by looking for it in the data context ie. `this`. `this` here coresponds to a post, which posesses _id property.
+
+You can pass additional argument that will create `this` context.
+`{{pathFor 'postPage' someOtherPost}}`. Practical use of this pattern would be getting the link to th previous or next posts in a list.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
