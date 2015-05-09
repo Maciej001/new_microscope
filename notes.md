@@ -151,6 +151,38 @@ if we name the route for posts `postPage`, we acn use  `{{pathFor 'postPage'}}`H
 You can pass additional argument that will create `this` context.
 `{{pathFor 'postPage' someOtherPost}}`. Practical use of this pattern would be getting the link to th previous or next posts in a list.
 
+## Session object
+To set session value: `Session.set('pageTitle', 'A different title');`
+
+to get session value: `Session.get('mySessionProperty');`
+
+Session object is not shared betwen users, or even between browser tabs.
+
+## Autorun
+Non-reactive context -> if we change variable we won't get new `alert` whenever we change the variable.
+```
+hello = function() {
+    alert(Session.get('message'));
+}
+```
+
+code within autorun keeps running each time the reactive data soures used inside it change.
+
+### HCR - Hot Code Reload
+ON HCR Meteor saves the session to local storage in browser and loads it in again after the reload.
+
+### Tips
+* Always store user state in the Session or the URL, so that users are minimally disrupted when a hot code reload happens
+* Sore any state that you want to be shareable between users within the URL itself. 
+
+## Ading Users
+`meteor add accounts-ui` or with Bootstrap:
+`meteor add ian:accounts-ui-bootstrap-3`
+`meteor add accounts-password`
+
+Above commands make *special accounts templates* available to us and we can include them using `{{> loginButtons}}` helper. To controll where it shows:
+`{{> loginButtons align="right"}}`.
+
 
 
 
