@@ -183,6 +183,69 @@ ON HCR Meteor saves the session to local storage in browser and loads it in agai
 Above commands make *special accounts templates* available to us and we can include them using `{{> loginButtons}}` helper. To controll where it shows:
 `{{> loginButtons align="right"}}`.
 
+By adding the `accounts` package, Meteor has created a special new collection, which can be accessed at Meteor.users. 
+
+`Meteor.users.findOne();` - in browser console to check
+
+`Meteor.user()` - returns current User
+
+The accounts package only publishes the *current User*. 
+
+## Reactivity
+Normally Meteor updates collections automatically. There is imperative way to do this:
+```
+Posts.find().observe({
+    added: function(post) {
+        // when 'added' callback fires, add HTML element
+        $('ul').append('<li id="' + post._id + '">' + post.title + '</li>');
+    },
+    changed: function(post) {
+        // when 'changed' callback fires, modify HTML element's text
+        $('ul li#' + post._id).text(post.title);
+    },
+    removed: function(post) {
+        // when 'removed' callback fires, remove HTML element
+        $('ul li#' + post._id).remove();
+    }
+});
+```
+
+It's usefull when dealing with third-party widgets (p104).
+
+### Computations
+Reactivity is limited to specific areas of code, and we call these areas **computations**. Computations are blocks of code that run every time one of the reactive data sources it depands on changes. 
+
+Every reacitve data source tracks all the computations that are using it so that it can let them know when its own value changes. To do so, it calls the `invalidate()` function on the computation.
+
+#### Setting up computations
+Wrap `Tracker` code inside `Meteor.startup()` to ensure that it only runs once Meteor has finished loading the `Posts` collection.
+
+```
+Meteor.startup(function(){
+    Tracker.autorun(function(){
+        console.log("There are " + Posts.find().count() + " posts");
+    })
+});
+```
+
+## Data security
+By default data security is turned off.
+`meteor remove insecure`
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
