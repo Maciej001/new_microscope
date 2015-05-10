@@ -1,6 +1,5 @@
 Template.postItem.helpers
 	ownPost: ->
-		console.log "this user id:", this.userId
 		this.userId is Meteor.userId()
 
 	domain: ->
