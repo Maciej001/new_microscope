@@ -278,6 +278,15 @@ Meteor Methods are executed on the server, so Meteor assumes they can be trusted
 
 It lets you check any Javascript object against a predefined pattern. We'll check that user calling the method is properly logged in (by making sure that `Meteor.userId` is `String`), and that the `postAttributes` object being passed as argument to the method contains `title` and `url` strings
 
+## Latancy compensation
+
+If Meteor.methods are in /lib they are available to both the server and the client - so it will run at the same time. 
+
+Changes requested on server by client are simulated as if they've been done already with no latancy. Then when client receives update from the server it updates client <- in most cases as expected, so nothing changes. 
+
+### Meteor._sleepForMs()
+Function delays the method call, but only on the server!!!
+
 
 
 
