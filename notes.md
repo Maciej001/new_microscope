@@ -269,6 +269,15 @@ To avoid blinking of strange templates use `Meteor.loggingIn()` for loading `loa
 
 `currentUser` helper is provided by the accounts package and is Spacebars equivalent of `Meteor.user()`. And it's *reactive*.
 
+## Meteor methods
+
+Meteor Methods are executed on the server, so Meteor assumes they can be trusted. As such, Meteor methods bypass ny allow/deny callbacks.
+
+
+## Security with auditargument-checks package
+
+It lets you check any Javascript object against a predefined pattern. We'll check that user calling the method is properly logged in (by making sure that `Meteor.userId` is `String`), and that the `postAttributes` object being passed as argument to the method contains `title` and `url` strings
+
 
 
 
