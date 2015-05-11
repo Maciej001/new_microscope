@@ -8,7 +8,6 @@ Template.postSubmit.events
 
 		Meteor.call 'postInsert', post, (error, result) ->
 			if error
-				console.log 'post', post
 				throwError error.reason
 
 			if result.postExists
