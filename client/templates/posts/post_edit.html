@@ -4,6 +4,7 @@
 			<label class="control-label" for="url">URL</label>
 			<div class="controls">
 				<input name="url" id="url" type="text" value="{{url}}" placeholder="Your URL" class="form-control"/>
+				<span class="{{errorClass}}">{{errorMessage 'url'}}</span>
 			</div>
 		</div>
 
@@ -11,6 +12,7 @@
 			<label class="control-label" for="title">Title</label>
 			<div class="controls">
 				<input name="title" id="title" type="text" value="{{title}}" placeholder="Name your post" class="form-control"/>
+				<span class="{{errorClass}}">{{errorMessage 'title'}}</span>
 			</div>
 		</div>
 

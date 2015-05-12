@@ -6,6 +6,12 @@ Template.postSubmit.events
 			url: $(e.target).find('[name=url]').val(),
 			title: $(e.target).find('[name=title]').val()
 
+		errors = validatePost post
+		if errors.title or errors.url
+			# if errors -> don't stop execution throwing errors
+			return Session.set 'postSubmitErrors', errors
+
+
 		Meteor.call 'postInsert', post, (error, result) ->
 			if error
 				throwError error.reason
@@ -15,6 +21,15 @@ Template.postSubmit.events
 
 			Router.go 'postPage', {_id: result._id}
 
+Template.postSubmit.onCreated ->
+	Session.set 'postSubmitErrors', {}
+
+Template.postSubmit.helpers
+	errorMessage: (field) ->
+		Session.get('postSubmitErrors')[field]
+
+	errorClass: (field) ->
+		Session.get('postSubmitErrors')[field] ? 'has-error' : ''
 
 
 		
