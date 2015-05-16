@@ -7,3 +7,10 @@ Template.postItem.helpers
 		a = document.createElement 'a'
 		a.href = @url
 		a.hostname
+
+	commentsCount: ->
+		comments = Comments.find
+			postId: @._id
+			
+		comments.count()
+
