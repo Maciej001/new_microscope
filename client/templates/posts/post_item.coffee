@@ -8,4 +8,17 @@ Template.postItem.helpers
 		a.href = @url
 		a.hostname
 
+	upvotedClass: ->
+		userId = Meteor.userId()
+		if userId && !_.include(@upvoters, userId)
+			'btn-primary upvotable'
+		else
+			'disabled'
+
+Template.postItem.events
+	'click .upvotable': (e) ->
+		e.preventDefault()
+		Meteor.call 'upvote', this._id
+
+
 
